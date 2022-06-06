@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import NotesDetail from '../screens/NotesDetail';
-import NotesList from '../screens/NotesList';
+import NotesDetailScreen from '../screens/NotesDetailScreen';
+import NotesListScreen from '../screens/NotesListScreen';
 
 const Stack = createStackNavigator();
 
@@ -14,8 +14,8 @@ const Router = () => {
                     headerShown: false
                 }}
             >
-                <Stack.Screen name="NotesList" component={NotesList} />
-                <Stack.Screen name="NotesDetail" component={NotesDetail} />
+                <Stack.Screen name="NotesList" component={NotesListScreen} />
+                <Stack.Screen name="NotesDetail" component={NotesDetailScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )
