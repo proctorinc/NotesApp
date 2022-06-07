@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite'
+import { DARK_THEME, TWO_COLUMN } from './consts'
 
 const db = SQLite.openDatabase('db.notesapp')
 
@@ -149,8 +150,8 @@ export const getFilteredNotes = (filter) => {
 const initializeSettings = () => {
     db.transaction(txn => {
         txn.executeSql(
-            `INSERT INTO settings (name, value) VALUES ('theme', 'dark')`,
-            [],
+            `INSERT INTO settings (name, value) VALUES ('theme', ?)`,
+            [DARK_THEME],
             (sqlTxn, res) => {
                 // console.log('Added note to db')
             },
@@ -162,8 +163,8 @@ const initializeSettings = () => {
     })
     db.transaction(txn => {
         txn.executeSql(
-            `INSERT INTO settings (name, value) VALUES ('layout', '1')`,
-            [],
+            `INSERT INTO settings (name, value) VALUES ('layout', ?)`,
+            [TWO_COLUMN],
             (sqlTxn, res) => {
                 // console.log('Added note to db')
             },
@@ -182,27 +183,56 @@ export const getSettings = () => {
                 `SELECT * FROM settings`,
                 null,
                 (sqlTxn, { rows: { _array } }) => {
-                    // console.log('Successfully fetched notes!')
-                    console.log('Should be [theme, layout]:')
-                    console.log(_array)
+                    let theme = DARK_THEME
+                    let layout = TWO_COLUMN
+
                     if (_array.length < 2) {
-                        console.log('Missing Settings!')
                         initializeSettings()
-                        resolve({ theme: 'dark', layout: '1' })
+                    } else {
+                        _array.forEach(setting => {
+                            if (setting.name == 'theme') {
+                                theme = setting.value
+                            } else if (setting.name == 'layout') {
+                                layout = setting.value
+                            }
+                        })
                     }
-                    resolve({ theme: 'dark', layout: '1' })
-                    // resolve(_array)
+                    resolve({ theme: theme, layout: layout })
                 },
-                error => {
-                    console.log('Error fetching notes: ')
-                    console.log(error)
-                    reject(error.message)
+                (sqlTxn, err) => {
+                    reject('Error fetching settings: ' + err.message)
                 }
             )
         })
     })
 }
 
-const updateSettings = () => {
+export const updateLayoutSetting = (newLayout) => {
+    db.transaction(txn => {
+        txn.executeSql(
+            `UPDATE settings SET value = ? WHERE name = 'layout'`,
+            [newLayout],
+            (sqlTxn, res) => {
+                // console.log('Updated layout')
+            },
+            (sqlTxn, err) => {
+                reject('Error updating layout setting: ' + err.message)
+            }
+        )
+    })
+}
 
+export const updateThemeSetting = (newTheme) => {
+    db.transaction(txn => {
+        txn.executeSql(
+            `UPDATE settings SET value = ? WHERE name = 'theme'`,
+            [newTheme],
+            (sqlTxn, res) => {
+                // console.log('Updated theme')
+            },
+            (sqlTxn, err) => {
+                reject('Error updating theme setting: ' + err.message)
+            }
+        )
+    })
 }

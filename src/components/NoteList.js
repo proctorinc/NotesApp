@@ -4,10 +4,11 @@ import MasonryList from '@react-native-seoul/masonry-list'
 import Header from './Header'
 import Note from './Note'
 import { ONE_COLUMN, TWO_COLUMN } from '../consts';
+import { useGlobalContext } from '../context/GlobalContext';
 
 const NoteList = ({ filter, data }) => {
     const navigation = useNavigation()
-    const listType = TWO_COLUMN
+    const { layout } = useGlobalContext()
 
     const renderNote = ({ item }) => {
         return (
@@ -19,13 +20,14 @@ const NoteList = ({ filter, data }) => {
                         note: item
                     })
                 }}
+                layout={layout}
             />
         )
     }
 
     return (
         <View style={styles.container}>
-            {listType == ONE_COLUMN
+            {layout == ONE_COLUMN
                 ? <FlatList
                     style={styles.flatList}
                     data={data}
@@ -49,22 +51,22 @@ const NoteList = ({ filter, data }) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
+        flexGrow: 1,
         backgroundColor: '#202124',
     },
     masonryList: {
         alignContent: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        paddingBottom: 70,
+        paddingBottom: 10,
         backgroundColor: '#202124',
         paddingRight: 5,
     },
     flatList: {
         backgroundColor: '#202124',
-        paddingRight: 5,
+        paddingHoriztonal: 5,
         width: '100%',
-        marginBottom: 70,
+        height: '0%',
     },
 })
 

@@ -26,8 +26,6 @@ const styles = StyleSheet.create({
     header: {
         paddingVertical: 10,
         paddingHorizontal: 20,
-        backgroundColor: '#202124',
-        // flexDirection: 'row',
         justifyContent: 'center',
     },
     headerTitle: {
@@ -45,7 +43,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     noNotes: {
-        // flexGrow: 1,
         width: '100%',
         justifyContent: 'center',
         paddingBottom: '25%',
@@ -60,25 +57,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#7e8291',
     },
-    // headerButtonSelected: {
-    //     backgroundColor: '#2f313b',
-    //     paddingHorizontal: 10,
-    //     paddingVertical: 5,
-    //     borderRadius: 10,
-    //     marginRight: 5,
-    // },
-    // headerButton: {
-    //     paddingHorizontal: 10,
-    //     paddingVertical: 5,
-    //     borderRadius: 10,
-    //     borderColor: '#6c7080',
-    //     borderWidth: 1,
-    //     marginRight: 5,
-    // },
-    // headerButtonText: {
-    //     color: '#7e8291',
-    //     fontSize: 18,
-    // },
 })
 
 export default Header

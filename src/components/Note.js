@@ -1,9 +1,10 @@
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native"
+import { ONE_COLUMN } from "../consts"
 
-const Note = ({ title, body, onPress }) => {
+const Note = ({ title, body, onPress, layout }) => {
     
     return (
-      <View style={styles.noteContainer}>
+      <View style={[styles.noteContainer, layout == ONE_COLUMN ? { paddingRight: 5 } : {} ]}>
         <TouchableOpacity
             style={styles.note}
             onPress={onPress}

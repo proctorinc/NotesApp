@@ -2,119 +2,15 @@ import { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard, TextInput } from 'react-native'
 import { Gear, MagnifyingGlass, PlusCircle, XCircle, X, Tag, ToggleLeft, ToggleRight, Plus, MinusCircle } from 'phosphor-react-native'
 import { useGlobalContext } from '../context/GlobalContext'
+import { DARK_THEME } from '../consts'
 
 const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
     const [open, setOpen] = useState('')
     const { theme, layout, toggleTheme, toggleLayout } = useGlobalContext()
     
-    console.log(theme, layout)
     return (
-        <View style={styles.bottomBar}>
-            <View style={styles.iconRow}>
-                <TouchableOpacity
-                        onPress={() => {
-                            setOpen(open == 'settings' ? '' : 'settings')
-                            updateFilter('')
-                        }}
-                        
-                        style={[styles.icon, {backgroundColor: open == 'settings' ? '#7e8291' : 'transparent'}]}
-                    >
-                    <Gear color={ open == 'settings' ? '#2f313b' : '#7e8291' } size={30} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        Keyboard.dismiss()
-                        setOpen(open == 'search' ? '' : 'search')
-                        updateFilter('')
-                    }}
-                        style={[styles.icon, {backgroundColor: open == 'search' ? '#7e8291' : 'transparent'}]}
-                    >
-                    <MagnifyingGlass color={ open == 'search' ? '#2f313b' : '#7e8291' } size={30} />
-                </TouchableOpacity>
-                {/* <TouchableOpacity
-                        onPress={() => {
-                            setOpen(open == 'filter' ? '' : 'filter')
-                            updateFilter('')
-                        }}
-                        style={[styles.icon, {backgroundColor: open == 'filter' ? '#7e8291' : 'transparent'}]}
-                    >
-                    <Tag color={ open == 'filter' ? '#2f313b' : '#7e8291' } size={30} />
-                </TouchableOpacity> */}
-                {open.length > 0
-                    ? <TouchableOpacity
-                        onPress={() => {
-                            setOpen('')
-                            updateFilter('')
-                        }}
-                        style={[styles.icon, { position: 'absolute', right: 0 }]}
-                    >
-                        <X color={'#7e8291'} size={30} />
-                    </TouchableOpacity>
-                    : null}
-            </View>
-            <View>
-                {open == 'search'
-                    ? <View style={styles.searchDrawer}>
-                        <TextInput
-                            maxLength={35}
-                            onChangeText={text => {
-                                updateFilter(text)
-                            }}
-                            value={filter}
-                            style={styles.searchInput}
-                            placeholder={'Search...'}
-                            placeholderTextColor={'#7e8291'}
-                        />
-                        <TouchableOpacity
-                            onPress={() => {
-                                updateFilter('')
-                            }}
-                            style={styles.clearSearchIcon}
-                        >
-                            <XCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} />
-                        </TouchableOpacity>
-                    </View>
-                    : null}
-                {open == 'settings'
-                    ? <View style={styles.settingsDrawer}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                                toggleTheme()
-                            }}
-                            style={styles.settingsIcon}
-                        >
-                            {theme == 'dark'
-                                ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
-                                : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}
-                        </TouchableOpacity>
-                        <Text style={styles.text}>Theme: {theme}</Text>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                                toggleLayout()
-                            }}
-                            style={styles.settingsIcon}
-                        >
-                            {layout == 1
-                                ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
-                                : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}  
-                        </TouchableOpacity>
-                        <Text style={styles.text}>Layout: {layout == 1 ? 'One Column' : 'Two Columns'}{layout}</Text>
-                        {/* <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                            }}
-                            style={styles.settingsIcon}
-                        >
-                            <MinusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
-                            <Text style={styles.text}>TextSize</Text>
-                            <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
-                        </TouchableOpacity> */}
-                    </View>
-                    : null}
-            </View>
-            <View>
+        <View>
+            <View style={styles.floatingContainer}>
                 <TouchableOpacity
                     onPress={onCreateNote}
                     style={styles.createNote}
@@ -122,22 +18,136 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                     <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={64} weight={'thin'} />
                 </TouchableOpacity>
             </View>
+            <View style={styles.bottomBar}>
+                <View style={styles.iconRow}>
+                    <TouchableOpacity
+                            onPress={() => {
+                                setOpen(open == 'settings' ? '' : 'settings')
+                                updateFilter('')
+                            }}
+                            
+                            style={[styles.icon, {backgroundColor: open == 'settings' ? '#7e8291' : 'transparent'}]}
+                        >
+                        <Gear color={ open == 'settings' ? '#2f313b' : '#7e8291' } size={30} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            Keyboard.dismiss()
+                            setOpen(open == 'search' ? '' : 'search')
+                            updateFilter('')
+                        }}
+                            style={[styles.icon, {backgroundColor: open == 'search' ? '#7e8291' : 'transparent'}]}
+                        >
+                        <MagnifyingGlass color={ open == 'search' ? '#2f313b' : '#7e8291' } size={30} />
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity
+                            onPress={() => {
+                                setOpen(open == 'filter' ? '' : 'filter')
+                                updateFilter('')
+                            }}
+                            style={[styles.icon, {backgroundColor: open == 'filter' ? '#7e8291' : 'transparent'}]}
+                        >
+                        <Tag color={ open == 'filter' ? '#2f313b' : '#7e8291' } size={30} />
+                    </TouchableOpacity> */}
+                    {open.length > 0
+                        ? <TouchableOpacity
+                            onPress={() => {
+                                setOpen('')
+                                updateFilter('')
+                            }}
+                            style={[styles.icon, { position: 'absolute', right: 0 }]}
+                        >
+                            <X color={'#7e8291'} size={30} />
+                        </TouchableOpacity>
+                        : null}
+                </View>
+                <View>
+                    {open == 'search'
+                        ? <View style={styles.searchDrawer}>
+                            <TextInput
+                                maxLength={35}
+                                onChangeText={text => {
+                                    updateFilter(text)
+                                }}
+                                value={filter}
+                                style={styles.searchInput}
+                                placeholder={'Search...'}
+                                placeholderTextColor={'#7e8291'}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    updateFilter('')
+                                }}
+                                style={styles.clearSearchIcon}
+                            >
+                                <XCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} />
+                            </TouchableOpacity>
+                        </View>
+                        : null}
+                    {open == 'settings'
+                        ? <View style={styles.settingsDrawer}>
+                            <View style={styles.settingRow}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        // setOpen('confirmDelete')
+                                        toggleTheme()
+                                    }}
+                                    style={styles.settingsIcon}
+                                >
+                                    {theme == DARK_THEME
+                                        ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
+                                        : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}
+                                </TouchableOpacity>
+                                <Text style={styles.text}>Theme: </Text>
+                                <Text style={[styles.text, styles.button]}>{theme}</Text>
+                            </View>
+                            <View style={styles.settingRow}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        // setOpen('confirmDelete')
+                                        toggleLayout()
+                                    }}
+                                    style={styles.settingsIcon}
+                                >
+                                    {layout == 1
+                                        ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
+                                        : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}  
+                                </TouchableOpacity>
+                                <Text style={styles.text}>Layout: </Text>
+                                <Text style={[styles.text, styles.button]}>{layout == 2 ? 'One Column' : 'Two Columns'}</Text>
+                            </View>
+                            {/* <TouchableOpacity
+                                onPress={() => {
+                                    // setOpen('confirmDelete')
+                                }}
+                                style={styles.settingsIcon}
+                            >
+                                <MinusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
+                                <Text style={styles.text}>TextSize</Text>
+                                <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
+                            </TouchableOpacity> */}
+                        </View>
+                        : null}
+                </View>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 25,
-        paddingHorizontal: 20,
-        backgroundColor: '#202124',
         flex: 1,
     },
+    floatingContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        height: 0,
+    },
     createNote: {
-        position: 'absolute',
-        bottom: 35,
-        right: 10,
-        backgroundColor: '#2f313b',
+        bottom: 70,
+        right: 5,
+        // backgroundColor: '#2f313b',
+        backgroundColor: 'red',
         borderRadius: 100,
     },
     searchInput: {
@@ -149,7 +159,6 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 50,
         width: '100%',
-        // textAlign: 'center',
     },
     clearSearchIcon: {
         marginLeft: -50,
@@ -169,8 +178,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     bottomBar: {
-        position: 'absolute',
-        bottom: 0,
+        // position: 'absolute',
+        // bottom: 0,
         width: '100%',
         backgroundColor: '#2f313b',
         padding: 10,
@@ -186,7 +195,8 @@ const styles = StyleSheet.create({
         borderRadius: 100,
     },
     settingsIcon: {
-        flexDirection: 'row',
+        // flexDirection: 'row',
+        paddingRight: 10,
     },
     drawer: {
         padding: 10,
@@ -197,7 +207,11 @@ const styles = StyleSheet.create({
         alignContent: 'center',
     },
     settingsDrawer: {
-        paddingVertical: 20,
+        padding: 20,
+    },
+    settingRow: {
+        flexDirection: 'row',
+        alignItems: "center",
     },
     confirmDeleteDrawer: {
         flexDirection: 'row',
@@ -207,14 +221,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     button: {
-        flexDirection: 'row',
-        // borderWidth: 1,
-        // borderColor: '#7e8291',
-        marginBottom: 5,
-        padding: 10,
+        paddingHorizontal: 20,
         borderRadius: 10,
-        textAlign: 'center',
-        justifyContent: 'center',
         backgroundColor: '#202124',
     },
   })
