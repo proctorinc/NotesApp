@@ -1,25 +1,20 @@
-import { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid, Keyboard, TextInput } from 'react-native'
-// import { Trash, Circle, Palette, ListChecks, DotsThreeVertical } from 'phosphor-react-native'
-import { Gear, Trash, MagnifyingGlass, Funnel, SquaresFour, PlusCircle, XCircle, X, Tag } from 'phosphor-react-native'
-import { deleteNote } from '../db'
+import { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard, TextInput } from 'react-native'
+import { Gear, MagnifyingGlass, PlusCircle, XCircle, X, Tag, ToggleLeft, ToggleRight, Plus, MinusCircle } from 'phosphor-react-native'
+import { useGlobalContext } from '../context/GlobalContext'
 
-const NoteListDrawer = ({ onCreateNote, search, setSearch}) => {
+const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
     const [open, setOpen] = useState('')
-
-    // useEffect(() => {
-    //     if (closed) {
-    //         setOpen('')
-    //     }
-    // }, [closed])
-
+    const { theme, layout, toggleTheme, toggleLayout } = useGlobalContext()
+    
+    console.log(theme, layout)
     return (
         <View style={styles.bottomBar}>
             <View style={styles.iconRow}>
                 <TouchableOpacity
                         onPress={() => {
                             setOpen(open == 'settings' ? '' : 'settings')
-                            setSearch('')
+                            updateFilter('')
                         }}
                         
                         style={[styles.icon, {backgroundColor: open == 'settings' ? '#7e8291' : 'transparent'}]}
@@ -30,35 +25,26 @@ const NoteListDrawer = ({ onCreateNote, search, setSearch}) => {
                     onPress={() => {
                         Keyboard.dismiss()
                         setOpen(open == 'search' ? '' : 'search')
-                        setSearch('')
+                        updateFilter('')
                     }}
                         style={[styles.icon, {backgroundColor: open == 'search' ? '#7e8291' : 'transparent'}]}
                     >
                     <MagnifyingGlass color={ open == 'search' ? '#2f313b' : '#7e8291' } size={30} />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                         onPress={() => {
                             setOpen(open == 'filter' ? '' : 'filter')
-                            setSearch('')
+                            updateFilter('')
                         }}
                         style={[styles.icon, {backgroundColor: open == 'filter' ? '#7e8291' : 'transparent'}]}
                     >
                     <Tag color={ open == 'filter' ? '#2f313b' : '#7e8291' } size={30} />
-                </TouchableOpacity>
-                {/* <TouchableOpacity
-                        onPress={() => {
-                            setOpen(open == 'categories' ? '' : 'categories')
-                            setSearch('')
-                        }}
-                        style={[styles.icon, {backgroundColor: open == 'categories' ? '#7e8291' : 'transparent'}]}
-                    >
-                    <SquaresFour color={ open == 'categories' ? '#2f313b' : '#7e8291' } size={30} />
                 </TouchableOpacity> */}
                 {open.length > 0
                     ? <TouchableOpacity
                         onPress={() => {
                             setOpen('')
-                            setSearch('')
+                            updateFilter('')
                         }}
                         style={[styles.icon, { position: 'absolute', right: 0 }]}
                     >
@@ -72,16 +58,16 @@ const NoteListDrawer = ({ onCreateNote, search, setSearch}) => {
                         <TextInput
                             maxLength={35}
                             onChangeText={text => {
-                                setSearch(text)
+                                updateFilter(text)
                             }}
-                            value={search}
+                            value={filter}
                             style={styles.searchInput}
                             placeholder={'Search...'}
                             placeholderTextColor={'#7e8291'}
                         />
                         <TouchableOpacity
                             onPress={() => {
-                                setSearch('')
+                                updateFilter('')
                             }}
                             style={styles.clearSearchIcon}
                         >
@@ -94,39 +80,37 @@ const NoteListDrawer = ({ onCreateNote, search, setSearch}) => {
                         <TouchableOpacity
                             onPress={() => {
                                 // setOpen('confirmDelete')
+                                toggleTheme()
                             }}
-                            style={styles.button}
+                            style={styles.settingsIcon}
                         >
-                            {/* <Trash color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30}/> */}
-                            <Text style={styles.text}>Setting #1</Text>
+                            {theme == 'dark'
+                                ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
+                                : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}
                         </TouchableOpacity>
+                        <Text style={styles.text}>Theme: {theme}</Text>
                         <TouchableOpacity
                             onPress={() => {
                                 // setOpen('confirmDelete')
+                                toggleLayout()
                             }}
-                            style={styles.button}
+                            style={styles.settingsIcon}
                         >
-                            {/* <Trash color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30}/> */}
-                            <Text style={styles.text}>Setting #2</Text>
+                            {layout == 1
+                                ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
+                                : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}  
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        <Text style={styles.text}>Layout: {layout == 1 ? 'One Column' : 'Two Columns'}{layout}</Text>
+                        {/* <TouchableOpacity
                             onPress={() => {
                                 // setOpen('confirmDelete')
                             }}
-                            style={styles.button}
+                            style={styles.settingsIcon}
                         >
-                            {/* <Trash color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30}/> */}
-                            <Text style={styles.text}>Setting #3</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                            }}
-                            style={styles.button}
-                        >
-                            {/* <Trash color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30}/> */}
-                            <Text style={styles.text}>Setting #4</Text>
-                        </TouchableOpacity>
+                            <MinusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
+                            <Text style={styles.text}>TextSize</Text>
+                            <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
+                        </TouchableOpacity> */}
                     </View>
                     : null}
             </View>
@@ -200,6 +184,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         padding: 5,
         borderRadius: 100,
+    },
+    settingsIcon: {
+        flexDirection: 'row',
     },
     drawer: {
         padding: 10,

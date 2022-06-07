@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite'
 const db = SQLite.openDatabase('db.notesapp')
 
 /**
- * Checks to make sure the table exists. Creates database table if not.
+ * Checks to make sure the notes and settings tables exist. Creates database tables if not.
  */
 export const createTables = () => {
     db.transaction(txn => {
@@ -14,7 +14,19 @@ export const createTables = () => {
                 // console.log('Successfully created Table!')
             },
             error => {
-                console.log('Error creating table: ' + error.message)
+                console.log('Error creating notes table: ' + error.message)
+            }
+        )
+    })
+    db.transaction(txn => {
+        txn.executeSql(
+            `CREATE TABLE IF NOT EXISTS settings (name VARCHAR(20) PRIMARY KEY, value VARCHAR(20))`,
+            null,
+            (sqlTxn, res) => {
+                // console.log('Successfully created Table!')
+            },
+            error => {
+                console.log('Error creating settings table: ' + error.message)
             }
         )
     })
@@ -70,7 +82,6 @@ export const updateNote = (id, title, body) => {
  *  Get all notes from database. Make sure table is created before querying 
  */
 export const getNotes = () => {
-    createTables()
     return new Promise(async (resolve, reject) => {
         db.transaction(txn => {
             txn.executeSql(
@@ -109,8 +120,13 @@ export const deleteNote = (id) => {
     })
 }
 
+/**
+ * Gets notes from database checking for title or body containing filter text
+ * 
+ * @param {*} filter 
+ * @returns 
+ */
 export const getFilteredNotes = (filter) => {
-    createTables()
     return new Promise(async (resolve, reject) => {
         db.transaction(txn => {
             txn.executeSql(
@@ -128,4 +144,65 @@ export const getFilteredNotes = (filter) => {
             )
         })
     })
+}
+
+const initializeSettings = () => {
+    db.transaction(txn => {
+        txn.executeSql(
+            `INSERT INTO settings (name, value) VALUES ('theme', 'dark')`,
+            [],
+            (sqlTxn, res) => {
+                // console.log('Added note to db')
+            },
+            (sqlTxn, err) => {
+                console.log('Error adding settings to db: ')
+                console.log(err)
+            }
+        )
+    })
+    db.transaction(txn => {
+        txn.executeSql(
+            `INSERT INTO settings (name, value) VALUES ('layout', '1')`,
+            [],
+            (sqlTxn, res) => {
+                // console.log('Added note to db')
+            },
+            (sqlTxn, err) => {
+                console.log('Error adding settings to db: ')
+                console.log(err)
+            }
+        )
+    })
+}
+
+export const getSettings = () => {
+    return new Promise(async (resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                `SELECT * FROM settings`,
+                null,
+                (sqlTxn, { rows: { _array } }) => {
+                    // console.log('Successfully fetched notes!')
+                    console.log('Should be [theme, layout]:')
+                    console.log(_array)
+                    if (_array.length < 2) {
+                        console.log('Missing Settings!')
+                        initializeSettings()
+                        resolve({ theme: 'dark', layout: '1' })
+                    }
+                    resolve({ theme: 'dark', layout: '1' })
+                    // resolve(_array)
+                },
+                error => {
+                    console.log('Error fetching notes: ')
+                    console.log(error)
+                    reject(error.message)
+                }
+            )
+        })
+    })
+}
+
+const updateSettings = () => {
+
 }

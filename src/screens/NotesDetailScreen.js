@@ -9,7 +9,6 @@ const NotesDetailScreen = ({ route, navigation }) => {
     const [title, setTitle] = useState(note ? note.title : '')
     const [body, setBody] = useState(note ? note.body : '')
     const [wasEdited, setWasEdited] = useState(false)
-    // const {closeDrawer, setCloseDrawer} = useState(false)
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleBackPress)

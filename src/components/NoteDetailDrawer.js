@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid, Keyboard } from 'react-native'
-import { Trash, Circle, Palette, ListChecks, DotsThreeVertical } from 'phosphor-react-native'
+import { Trash, Circle, Palette, ListChecks, DotsThreeVertical, Wrench, Sliders } from 'phosphor-react-native'
 import { deleteNote } from '../db'
 
 const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
@@ -41,13 +41,13 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                 <TouchableOpacity
                         onPress={() => {
                             Keyboard.dismiss()
-                            setOpen(open == 'settings' ? '' : 'settings')
+                            setOpen(open == 'settings' ? '' : open == 'confirmDelete' ? '' : 'settings')
                         }}
                         style={styles.icon}
                     >
-                    <DotsThreeVertical color={'#7e8291'} size={30} />
+                    <Trash color={'#7e8291'} size={30} />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                         onPress={() => {
                             if (body.length > 0) {
                                 setBody(body + '\n\u2022')
@@ -58,7 +58,7 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                         style={styles.icon}
                     >
                     <ListChecks color={'#7e8291'} size={30} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                         onPress={() => ToastAndroid.show("Colors are not implemented", ToastAndroid.SHORT)}
                         style={styles.icon}
@@ -75,35 +75,8 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                             }}
                             style={styles.button}
                         >
-                            <Trash color={'#7e8291'} size={30}/>
-                            <Text style={styles.text}>Delete</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                            }}
-                            style={styles.button}
-                        >
                             {/* <Trash color={'#7e8291'} size={30}/> */}
-                            <Text style={styles.text}>Setting #2</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                            }}
-                            style={styles.button}
-                        >
-                            {/* <Trash color={'#7e8291'} size={30}/> */}
-                            <Text style={styles.text}>Setting #3</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // setOpen('confirmDelete')
-                            }}
-                            style={styles.button}
-                        >
-                            {/* <Trash color={'#7e8291'} size={30}/> */}
-                            <Text style={styles.text}>Setting #4</Text>
+                            <Text style={styles.text}>Delete Note</Text>
                         </TouchableOpacity>
                     </View>
                     : null}
@@ -119,7 +92,7 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                                 }}
                                 style={[styles.button, { width: '50%' }]}
                             >
-                                <Text style={styles.text}>Delete</Text>
+                                <Text style={styles.text}>Confirm</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {

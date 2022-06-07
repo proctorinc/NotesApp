@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingBottom: 5,
         backgroundColor: '#202124',
-        // width: '100%',
     },
     note: {
         width: '100%',
