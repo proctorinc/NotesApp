@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid, Keyboard } from 'react-native'
+import { View, Text, StyleSheet, Pressable, ToastAndroid, Keyboard } from 'react-native'
 import { Trash, Circle, Palette, ListChecks, DotsThreeVertical, Wrench, Sliders } from 'phosphor-react-native'
+import { useNavigation } from '@react-navigation/native'
 import { deleteNote } from '../db'
+import { useGlobalContext } from '../context/GlobalContext'
+import { BG_DARK, BG_MEDIUM } from '../consts'
 
-const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
+const NoteDetailDrawer = ({closed, id}) => {
+    const { keyboardVisible } = useGlobalContext()
+    const navigation = useNavigation()
     const [open, setOpen] = useState('')
 
     useEffect(() => {
@@ -14,31 +19,31 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
 
     // const colorDrawer = () => (
     //     <View style={styles.colorDrawer}>
-    //         <TouchableOpacity>
+    //         <Pressable>
     //             <Square color={'red'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
-    //         <TouchableOpacity>
+    //         </Pressable>
+    //         <Pressable>
     //             <Square color={'orange'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
-    //         <TouchableOpacity>
+    //         </Pressable>
+    //         <Pressable>
     //             <Square color={'yellow'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
-    //         <TouchableOpacity>
+    //         </Pressable>
+    //         <Pressable>
     //             <Square color={'green'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
-    //         <TouchableOpacity>
+    //         </Pressable>
+    //         <Pressable>
     //             <Square color={'blue'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
-    //         <TouchableOpacity>
+    //         </Pressable>
+    //         <Pressable>
     //             <Square color={'purple'} weight={'fill'} size={50}/>
-    //         </TouchableOpacity>
+    //         </Pressable>
     //     </View>
     // )
 
     return (
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, keyboardVisible ? { minHeight: 0 } : {}]}>
             <View style={styles.iconRow}>
-                <TouchableOpacity
+                <Pressable
                         onPress={() => {
                             Keyboard.dismiss()
                             setOpen(open == 'settings' ? '' : open == 'confirmDelete' ? '' : 'settings')
@@ -46,8 +51,8 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                         style={styles.icon}
                     >
                     <Trash color={'#7e8291'} size={30} />
-                </TouchableOpacity>
-                {/* <TouchableOpacity
+                </Pressable>
+                {/* <Pressable
                         onPress={() => {
                             if (body.length > 0) {
                                 setBody(body + '\n\u2022')
@@ -58,18 +63,18 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                         style={styles.icon}
                     >
                     <ListChecks color={'#7e8291'} size={30} />
-                </TouchableOpacity> */}
-                <TouchableOpacity
+                </Pressable> */}
+                <Pressable
                         onPress={() => ToastAndroid.show("Colors are not implemented", ToastAndroid.SHORT)}
                         style={styles.icon}
                     >
                     <Palette color={'#7e8291'} size={30} />
-                </TouchableOpacity>
+                </Pressable>
             </View>
             <View>
                 {open == 'settings'
                     ? <View style={styles.settingsDrawer}>
-                        <TouchableOpacity
+                        <Pressable
                             onPress={() => {
                                 setOpen('confirmDelete')
                             }}
@@ -77,31 +82,31 @@ const NoteDetailDrawer = ({closed, id, onComplete, body, setBody}) => {
                         >
                             {/* <Trash color={'#7e8291'} size={30}/> */}
                             <Text style={styles.text}>Delete Note</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
                     : null}
                 {open == 'confirmDelete'
                     ? <View style={styles.drawer}>
                         <Text style={styles.text}>Are you sure you want to delete?</Text>
                         <View style={styles.confirmDeleteDrawer}>
-                            <TouchableOpacity
+                            <Pressable
                                 onPress={() => {
                                     deleteNote(id)
-                                    onComplete()
+                                    navigation.navigate('NotesList')
                                     setOpen('')
                                 }}
                                 style={[styles.button, { width: '50%' }]}
                             >
                                 <Text style={styles.text}>Confirm</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
+                            </Pressable>
+                            <Pressable
                                 onPress={() => {
                                     setOpen('')
                                 }}
                                 style={[styles.button, { width: '50%' }]}
                             >
                                 <Text style={styles.text}>Cancel</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     </View>
                     : null}
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 25,
         paddingHorizontal: 20,
-        backgroundColor: '#202124',
+        backgroundColor: BG_DARK,
         flex: 1,
     },
     titleInput: {
@@ -138,13 +143,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     bottomBar: {
-        position: 'absolute',
+        // position: 'absolute',
         bottom: 0,
         width: '100%',
-        backgroundColor: '#2f313b',
+        backgroundColor: BG_MEDIUM,
         padding: 10,
         minHeight: 70,
-        borderRadius: 10,
+        borderTopEndRadius: 10,
+        borderTopStartRadius: 10,
     },
     iconRow: {
         flexDirection: 'row',
@@ -174,7 +180,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         textAlign: 'center',
         justifyContent: 'center',
-        backgroundColor: '#202124',
+        backgroundColor: BG_DARK,
     },
   })
 

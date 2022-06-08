@@ -1,13 +1,29 @@
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native"
-import { ONE_COLUMN } from "../consts"
+import { useState } from 'react'
+import { View, Text, StyleSheet, Pressable } from "react-native"
+import { BG_DARK, ONE_COLUMN } from "../consts"
+import { useGlobalContext } from '../context/GlobalContext'
 
-const Note = ({ title, body, onPress, layout }) => {
+const Note = ({ id, title, body, onPress, layout }) => {
+    const { isNoteSelected, selectNote, deselectNote, isAnyNoteSelected } = useGlobalContext()
+
+    const handlePress = () => {
+        if (isNoteSelected(id)) {
+            deselectNote(id)
+        } else if (isAnyNoteSelected() && !isNoteSelected(id)) {
+            selectNote(id)
+        } else {
+            onPress()
+        }
+    }
     
     return (
       <View style={[styles.noteContainer, layout == ONE_COLUMN ? { paddingRight: 5 } : {} ]}>
-        <TouchableOpacity
-            style={styles.note}
-            onPress={onPress}
+        <Pressable
+            style={[styles.note, isNoteSelected(id) ? styles.selected : styles.notSelected]}
+            onPress={handlePress}
+            onLongPress={() => {
+                selectNote(id)
+            }}
         >
         {title.length > 0
             ? <Text
@@ -25,23 +41,30 @@ const Note = ({ title, body, onPress, layout }) => {
                     {body}
             </Text>
             : null}
-        </TouchableOpacity>
+        </Pressable>
       </View>
     )
 }
 
 const styles = StyleSheet.create({
     noteContainer: {
-        paddingLeft: 5,
+        paddingLeft: 7,
         paddingBottom: 5,
-        backgroundColor: '#202124',
+        backgroundColor: BG_DARK,
     },
-    note: {
-        width: '100%',
-        padding: 10,
-        borderRadius: 10,
+    selected: {
+        borderWidth: 1,
+        borderColor: 'white',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    notSelected: {
         borderWidth: 1,
         borderColor: '#6c7080',
+    },
+    note: {
+        padding: 10,
+        width: '100%',
+        borderRadius: 10,
     },
     title: {
         fontSize: 20,

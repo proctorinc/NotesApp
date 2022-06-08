@@ -3,6 +3,7 @@ import { StyleSheet, View, StatusBar, ActivityIndicator } from 'react-native'
 import { getFilteredNotes, createNote } from '../db'
 import NoteListDrawer from '../components/NoteListDrawer'
 import NoteList from '../components/NoteList'
+import { BG_DARK } from '../consts'
 
 const NotesListScreen = ({ navigation }) => {
     const [notes, setNotes] = useState([])
@@ -43,10 +44,10 @@ const NotesListScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <StatusBar
-                backgroundColor="#202124"
+                backgroundColor={BG_DARK}
             />
             {notes
-                ? <NoteList filter={search} data={notes} />
+                ? <NoteList filter={search} data={notes} onDeleteNotes={fetchNotes} />
                 : <ActivityIndicator size="large" />}
 
             <NoteListDrawer filter={search} updateFilter={updateSearch} onCreateNote={handleCreateNote} />
@@ -57,7 +58,7 @@ const NotesListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        backgroundColor: '#202124',
+        backgroundColor: BG_DARK,
     },
 })
 

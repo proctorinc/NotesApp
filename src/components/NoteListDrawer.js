@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Keyboard, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Keyboard, TextInput } from 'react-native'
 import { Gear, MagnifyingGlass, PlusCircle, XCircle, X, Tag, ToggleLeft, ToggleRight, Plus, MinusCircle } from 'phosphor-react-native'
 import { useGlobalContext } from '../context/GlobalContext'
-import { DARK_THEME } from '../consts'
+import { BG_DARK, BG_MEDIUM, DARK_THEME } from '../consts'
 
 const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
     const [open, setOpen] = useState('')
@@ -11,16 +11,16 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
     return (
         <View>
             <View style={styles.floatingContainer}>
-                <TouchableOpacity
+                <Pressable
                     onPress={onCreateNote}
                     style={styles.createNote}
                 >
-                    <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={64} weight={'thin'} />
-                </TouchableOpacity>
+                    <PlusCircle color={ open == 'X' ? BG_MEDIUM : '#7e8291' } size={64} weight={'thin'} />
+                </Pressable>
             </View>
             <View style={styles.bottomBar}>
                 <View style={styles.iconRow}>
-                    <TouchableOpacity
+                    <Pressable
                             onPress={() => {
                                 setOpen(open == 'settings' ? '' : 'settings')
                                 updateFilter('')
@@ -28,9 +28,9 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                             
                             style={[styles.icon, {backgroundColor: open == 'settings' ? '#7e8291' : 'transparent'}]}
                         >
-                        <Gear color={ open == 'settings' ? '#2f313b' : '#7e8291' } size={30} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                        <Gear color={ open == 'settings' ? BG_DARK : '#7e8291' } size={30} />
+                    </Pressable>
+                    <Pressable
                         onPress={() => {
                             Keyboard.dismiss()
                             setOpen(open == 'search' ? '' : 'search')
@@ -38,19 +38,19 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                         }}
                             style={[styles.icon, {backgroundColor: open == 'search' ? '#7e8291' : 'transparent'}]}
                         >
-                        <MagnifyingGlass color={ open == 'search' ? '#2f313b' : '#7e8291' } size={30} />
-                    </TouchableOpacity>
-                    {/* <TouchableOpacity
+                        <MagnifyingGlass color={ open == 'search' ? BG_DARK : '#7e8291' } size={30} />
+                    </Pressable>
+                    {/* <Pressable
                             onPress={() => {
                                 setOpen(open == 'filter' ? '' : 'filter')
                                 updateFilter('')
                             }}
                             style={[styles.icon, {backgroundColor: open == 'filter' ? '#7e8291' : 'transparent'}]}
                         >
-                        <Tag color={ open == 'filter' ? '#2f313b' : '#7e8291' } size={30} />
-                    </TouchableOpacity> */}
+                        <Tag color={ open == 'filter' ? BG_MEDIUM : '#7e8291' } size={30} />
+                    </Pressable> */}
                     {open.length > 0
-                        ? <TouchableOpacity
+                        ? <Pressable
                             onPress={() => {
                                 setOpen('')
                                 updateFilter('')
@@ -58,7 +58,7 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                             style={[styles.icon, { position: 'absolute', right: 0 }]}
                         >
                             <X color={'#7e8291'} size={30} />
-                        </TouchableOpacity>
+                        </Pressable>
                         : null}
                 </View>
                 <View>
@@ -74,20 +74,20 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                                 placeholder={'Search...'}
                                 placeholderTextColor={'#7e8291'}
                             />
-                            <TouchableOpacity
+                            <Pressable
                                 onPress={() => {
                                     updateFilter('')
                                 }}
                                 style={styles.clearSearchIcon}
                             >
-                                <XCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} />
-                            </TouchableOpacity>
+                                <XCircle color={BG_MEDIUM} size={30} />
+                            </Pressable>
                         </View>
                         : null}
                     {open == 'settings'
                         ? <View style={styles.settingsDrawer}>
                             <View style={styles.settingRow}>
-                                <TouchableOpacity
+                                <Pressable
                                     onPress={() => {
                                         // setOpen('confirmDelete')
                                         toggleTheme()
@@ -97,12 +97,12 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                                     {theme == DARK_THEME
                                         ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
                                         : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}
-                                </TouchableOpacity>
+                                </Pressable>
                                 <Text style={styles.text}>Theme: </Text>
                                 <Text style={[styles.text, styles.button]}>{theme}</Text>
                             </View>
                             <View style={styles.settingRow}>
-                                <TouchableOpacity
+                                <Pressable
                                     onPress={() => {
                                         // setOpen('confirmDelete')
                                         toggleLayout()
@@ -112,20 +112,20 @@ const NoteListDrawer = ({ onCreateNote, filter, updateFilter}) => {
                                     {layout == 1
                                         ? <ToggleLeft color={'#7e8291'} size={50} weight={'thin'}/>
                                         : <ToggleRight color={'#7e8291'} size={50} weight={'thin'}/>}  
-                                </TouchableOpacity>
+                                </Pressable>
                                 <Text style={styles.text}>Layout: </Text>
                                 <Text style={[styles.text, styles.button]}>{layout == 2 ? 'One Column' : 'Two Columns'}</Text>
                             </View>
-                            {/* <TouchableOpacity
+                            {/* <Pressable
                                 onPress={() => {
                                     // setOpen('confirmDelete')
                                 }}
                                 style={styles.settingsIcon}
                             >
-                                <MinusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
+                                <MinusCircle color={ open == 'X' ? BG_MEDIUM : '#7e8291' } size={30} weight={'thin'}/>
                                 <Text style={styles.text}>TextSize</Text>
-                                <PlusCircle color={ open == 'X' ? '#2f313b' : '#7e8291' } size={30} weight={'thin'}/>
-                            </TouchableOpacity> */}
+                                <PlusCircle color={ open == 'X' ? BG_MEDIUM : '#7e8291' } size={30} weight={'thin'}/>
+                            </Pressable> */}
                         </View>
                         : null}
                 </View>
@@ -146,23 +146,22 @@ const styles = StyleSheet.create({
     createNote: {
         bottom: 70,
         right: 5,
-        // backgroundColor: '#2f313b',
-        backgroundColor: 'red',
+        // backgroundColor: BG_MEDIUM,
         borderRadius: 100,
     },
     searchInput: {
-        fontSize: 18,
-        color: '#f0f1f5',
-        backgroundColor: '#202124',
-        borderRadius: 10,
-        paddingVertical: 5,
-        paddingLeft: 15,
-        paddingRight: 50,
+        fontSize: 20,
+        color: 'white',
         width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: BG_DARK,
+        borderRadius: 10,
+        marginBottom: 5,
     },
     clearSearchIcon: {
         marginLeft: -50,
-        paddingTop: 5,
+        paddingTop: 10,
         paddingHorizontal: 10,
     },
     // bodyInput: {
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // bottom: 0,
         width: '100%',
-        backgroundColor: '#2f313b',
+        backgroundColor: BG_MEDIUM,
         padding: 10,
         borderRadius: 10,
         minHeight: 70,
@@ -203,15 +202,21 @@ const styles = StyleSheet.create({
     },
     searchDrawer: {
         flexDirection: 'row',
-        paddingVertical: 20,
+        paddingTop: 15,
+        paddingBottom: 25,
         alignContent: 'center',
     },
     settingsDrawer: {
-        padding: 20,
+        paddingVertical: 15,
+        // margin: 5,
     },
     settingRow: {
         flexDirection: 'row',
         alignItems: "center",
+        paddingHorizontal: 20,
+        backgroundColor: BG_DARK,
+        borderRadius: 10,
+        marginBottom: 5,
     },
     confirmDeleteDrawer: {
         flexDirection: 'row',
@@ -223,7 +228,7 @@ const styles = StyleSheet.create({
     button: {
         paddingHorizontal: 20,
         borderRadius: 10,
-        backgroundColor: '#202124',
+        backgroundColor: BG_DARK,
     },
   })
 
